@@ -10,20 +10,22 @@ function Home() {
   const [sortOption, setSortOption] = useState('');
 
   const filteredData = data.filter((item: AnimeProp) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const sortedData = filteredData.sort((a: AnimeProp, b: AnimeProp) => {
-    if (sortOption === 'title') {
-      return a.title.localeCompare(b.title);
-    } else if (sortOption === 'year') {
-      return a.year - b.year;
+    if (sortOption === 'name') {
+      return a.name.localeCompare(b.name);
+    } else if (sortOption === 'score') {
+      return parseFloat(b.score) - parseFloat(a.score);
+    } else if (sortOption === 'episodes') {
+      return b.episodes - a.episodes;
     }
     return 0;
   });
 
   return (
-    <main className="sm:p-16 py-16 px-8 flex flex-col gap-10">
+    <main className="sm:p-16 py-16 px-8 flex flex-col gap-5">
       <h2 className="text-3xl text-white font-bold">Исследуйте Аниме</h2>
 
       <input
@@ -40,8 +42,9 @@ function Home() {
         className="p-2 rounded border border-gray-300 text-black"
       >
         <option value="">Без сортировки</option>
-        <option value="title">Сортировать по названию</option>
-        <option value="year">Сортировать по году</option>
+        <option value="name">Сортировать по названию</option>
+        <option value="score">Сортировать по рейтингу</option>
+        <option value="episodes">Сортировать по количеству эпизодов</option>
       </select>
 
       {sortedData.length === 0 ? (
