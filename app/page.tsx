@@ -7,22 +7,12 @@ import { data } from "./_data";
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedGenre, setSelectedGenre] = useState('');
   const [sortOption, setSortOption] = useState('');
 
-  // Получаем список уникальных жанров из данных
-  const genres = Array.from(new Set(data.flatMap((item) => item.genres)));
+  const filteredData = data.filter((item: AnimeProp) =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // Фильтрация данных
-  const filteredData = data
-    .filter((item: AnimeProp) =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .filter((item: AnimeProp) =>
-      selectedGenre ? item.genres.includes(selectedGenre) : true
-    );
-
-  // Сортировка данных
   const sortedData = filteredData.sort((a: AnimeProp, b: AnimeProp) => {
     if (sortOption === 'title') {
       return a.title.localeCompare(b.title);
@@ -36,7 +26,6 @@ function Home() {
     <main className="sm:p-16 py-16 px-8 flex flex-col gap-10">
       <h2 className="text-3xl text-white font-bold">Исследуйте Аниме</h2>
 
-      {/* Поисковая строка */}
       <input
         type="text"
         placeholder="Поиск по названию..."
@@ -45,21 +34,6 @@ function Home() {
         className="p-2 rounded border border-gray-300 text-black"
       />
 
-      {/* Фильтр по жанру */}
-      <select
-        value={selectedGenre}
-        onChange={(e) => setSelectedGenre(e.target.value)}
-        className="p-2 rounded border border-gray-300 text-black"
-      >
-        <option value="">Все жанры</option>
-        {genres.map((genre) => (
-          <option key={genre} value={genre}>
-            {genre}
-          </option>
-        ))}
-      </select>
-
-      {/* Опции сортировки */}
       <select
         value={sortOption}
         onChange={(e) => setSortOption(e.target.value)}
@@ -70,7 +44,6 @@ function Home() {
         <option value="year">Сортировать по году</option>
       </select>
 
-      {/* Отображение данных */}
       {sortedData.length === 0 ? (
         <p className="text-white">Аниме не найдено.</p>
       ) : (
